@@ -74,6 +74,7 @@ async function waitForGlbUrl(taskId: string, intervalMs = 5000, timeoutMs = 10 *
 	for (; ;) {
 		if (Date.now() - t0 > timeoutMs) throw new Error('timeout');
 
+		// meshy action status
 		const { data } = await axios.get<{
 			status: 'PENDING' | 'IN_PROGRESS' | 'SUCCEEDED' | 'FAILED';
 			model_urls?: { glb?: string };
@@ -85,11 +86,13 @@ async function waitForGlbUrl(taskId: string, intervalMs = 5000, timeoutMs = 10 *
 		if (data.status === 'SUCCEEDED') {
 			const glb = data.model_urls?.glb;
 			if (!glb) throw new Error('No GLB URL in task');
-			return glb; // 直接ダウンロード可能な GLB URL
+			return glb;
 		}
 		if (data.status === 'FAILED') {
 			throw new Error(data.task_error?.message || 'generation failed');
 		}
+
+		// wait
 		await new Promise(r => setTimeout(r, intervalMs));
 	}
 }
