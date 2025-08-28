@@ -52,3 +52,22 @@ GLB URL: https://assets.meshy.ai/54143a53-6708-4685-b0e4-705d1f6846ca/tasks/0198
 
 
 これ# note
+
+---
+
+## 開発者向けツール（Repo Tools）
+
+リポの現状/履歴を採取するスクリプトを用意しています（**`server/`・`index.html`・`.git` は変更しません**）。
+
+- 現状スナップショット  
+  ```bash
+  scripts/repo_snapshot.sh
+  ls -1 logs/snapshots | tail -n1 | sed 's|^|logs/snapshots/|'
+  ```
+- 活動レポート  
+  ```bash
+  scripts/repo_activity.sh
+  ls -1 logs/activity | tail -n1 | sed 's|^|logs/activity/|'
+  ```
+
+詳細：[`docs/repo-tools.md`](docs/repo-tools.md)
