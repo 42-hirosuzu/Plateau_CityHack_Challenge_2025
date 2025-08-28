@@ -43,8 +43,8 @@ scripts/
   ├─ repo_activity.sh       # 活動レポート
   └─ snapshot.exclude       # ← 除外リスト（本ファイルで管理）
 logs/
-  ├─ snapshots/ snapshot_YYYYmmdd_HHMMSS.txt
-  └─ activity/  activity_YYYYmmdd_HHMMSS.txt
+  ├─ snapshot_YYYYmmdd_HHMMSS.txt
+  └─ activity_YYYYmmdd_HHMMSS.txt
 ```
 
 > 実行時スナップショットの先頭に **Exclude file: scripts/snapshot.exclude** が出力されます。
@@ -60,14 +60,14 @@ logs/
 scripts/repo_snapshot.sh
 
 # 直近の出力ファイルを確認
-ls -1 logs/snapshots | tail -n1 | sed 's|^|logs/snapshots/|'
+ls -1 logs | tail -n1 | sed 's|^|logs|'
 ```
 
 ### 4.2 活動レポート
 
 ```bash
 scripts/repo_activity.sh
-ls -1 logs/activity | tail -n1 | sed 's|^|logs/activity/|'
+ls -1 logs | tail -n1 | sed 's|^|logs|'
 ```
 
 > **WSL の /mnt/c などが noexec の場合**は `bash scripts/…` で実行してください。

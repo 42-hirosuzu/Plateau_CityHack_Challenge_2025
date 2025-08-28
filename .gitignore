@@ -1,5 +1,3 @@
-cat >> .gitignore <<'EOF'
-
 # --- build & cache ---
 node_modules/
 dist/
@@ -26,8 +24,4 @@ activity_*.txt
 Thumbs.db
 .vscode/
 .idea/
-EOF
-
-# --- common build/cache ---
-# --- local env (keep example) ---
-# --- IDE/OS ---
+*.iml
