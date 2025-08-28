@@ -1,0 +1,14 @@
+{
+  "deviceId": "demo-phone-001",
+  "user": "tester",
+  "payload": {
+    "action": "spawn",
+    "model": "Cube",
+    "scale": [1.0, 1.0, 1.0],
+    "position": { "x": 0, "y": 0, "z": 0 }
+  },
+  "meta": {
+    "client": "unity-demo",
+    "version": "0.0.1"
+  }
+}

@@ -1,0 +1,33 @@
+cat >> .gitignore <<'EOF'
+
+# --- build & cache ---
+node_modules/
+dist/
+*.log
+
+# --- local env (雛形は許可) ---
+.env
+.env.*
+!/server/.env.example
+
+# --- UEなど将来のキャッシュ（念のため）---
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# --- local tools outputs ---
+logs/
+snapshot_*.txt
+activity_*.txt
+
+# --- OS/IDE ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+EOF
+
+# --- common build/cache ---
+# --- local env (keep example) ---
+# --- IDE/OS ---

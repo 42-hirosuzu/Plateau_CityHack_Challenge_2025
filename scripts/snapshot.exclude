@@ -1,0 +1,27 @@
+# scripts/snapshot.exclude
+# --- directories (anywhere) ---
+.git/
+node_modules/
+dist/
+build/
+.next/
+.cache/
+.venv/
+.idea/
+logs/
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# --- file globs ---
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.mov
+*.uasset
+*.umap
+.env
+.env.*
+
