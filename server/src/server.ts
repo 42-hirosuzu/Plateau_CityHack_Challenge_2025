@@ -33,9 +33,18 @@ app.post('/api/3Dcontents', async (req, res) => {
 	(async () => {
 		try {
 			jobs.set(jobId, { id: jobId, status: 'running' });
-			const taskId = await startTextTo3D(prompt);
-			const glbUrl = await waitForGlbUrl(taskId);
-			jobs.set(jobId, { id: jobId, status: 'ready', url: glbUrl, taskId });
+
+			// preview generate
+			const previewId = await startTextTo3D(prompt);
+			await waitForSuccess(previewId);
+
+			// add texture
+			const refineId = await startTextTo3DRefine(previewId, {
+				enable_pbr: true,
+			});
+			const glbUrl = await waitForGlbUrl(refineId);
+			
+			jobs.set(jobId, { id: jobId, status: 'ready', url: glbUrl, taskId: refineId });
 		} catch (e: any) {
 			jobs.set(jobId, { id: jobId, status: 'error', error: String(e?.message || e) });
 		}
@@ -68,7 +77,32 @@ async function startTextTo3D(prompt: string): Promise<string> {
 	return data.result; // ex: "018a21...f578"
 }
 
-// get glbUrl: 
+// refine object
+// opt->
+// enable_pbr: generate PBRmap too.
+// texture_prompt: "walnut wood shelves, brass accents"
+// texture_image_url: When you want to guide users using images.
+async function startTextTo3DRefine(previewTaskId: string, opts?: {
+	enable_pbr?: boolean;
+	texture_prompt?: string;
+	texture_image_url?: string;
+}): Promise<string> {
+	const { data } = await axios.post<{ result: string }>(
+		`${MESHY_API}/text-to-3d`,
+		{
+			mode: 'refine',
+			preview_task_id: previewTaskId,
+			enable_pbr: opts?.enable_pbr ?? true,
+			texture_prompt: opts?.texture_prompt,
+			texture_image_url: opts?.texture_image_url
+		},
+		{ headers: { Authorization: `Bearer ${MESHY_KEY}` } }
+	);
+	if (!data?.result) throw new Error('No refine task id');
+	return data.result;
+}
+
+// wait & get glbUrl: 
 async function waitForGlbUrl(taskId: string, intervalMs = 5000, timeoutMs = 10 * 60_000): Promise<string> {
 	const t0 = Date.now();
 	for (; ;) {
@@ -96,6 +130,22 @@ async function waitForGlbUrl(taskId: string, intervalMs = 5000, timeoutMs = 10 *
 		await new Promise(r => setTimeout(r, intervalMs));
 	}
 }
+
+// wait only
+async function waitForSuccess(taskId: string, intervalMs = 5000, timeoutMs = 10 * 60_000): Promise<void> {
+	const t0 = Date.now();
+	for (; ;) {
+		if (Date.now() - t0 > timeoutMs) throw new Error('timeout');
+		const { data } = await axios.get<{ status: 'PENDING' | 'IN_PROGRESS' | 'SUCCEEDED' | 'FAILED'; task_error?: { message?: string } }>(
+			`${MESHY_API}/text-to-3d/${taskId}`,
+			{ headers: { Authorization: `Bearer ${MESHY_KEY}` } }
+		);
+		if (data.status === 'SUCCEEDED') return;
+		if (data.status === 'FAILED') throw new Error(data.task_error?.message || 'preview failed');
+		await new Promise(r => setTimeout(r, intervalMs));
+	}
+}
+
 
 /* ----------------------------BOOT----------------------------------- */
 const port = Number(process.env.PORT || 3000);
