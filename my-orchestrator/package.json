@@ -9,7 +9,14 @@
     "dev": "nodemon --quiet server.js"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "@inworld/nodejs-sdk": "^1.17.0",
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
