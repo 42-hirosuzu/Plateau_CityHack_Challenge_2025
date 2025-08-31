@@ -1,6 +1,25 @@
 # ようこそ
 
-## meshy3Dコンテンツを作るためのサーバー準備
+## PBRオブジェクトURL発行までの手順
+１：server, my-inworld-ai, my-orchestratorそれぞれのディレクトリで```pnpm install```を実行し、依存関係をインストールする
+
+２：それぞれで```pnpm run dev```を実行し、listen状態にする。(起動順序はserver->in-world->orchestrator)
+
+３：4つ目のターミナルで、
+```
+curl -X POST http://localhost:3001/generate-model   -H "Content-Type: application/json"   -d "{\"keyword\":\"I want to create a magical fairytale kingdom in Urayasu, Chiba, but the main castle cannot be taller than 51 meters and the style must be welcoming to families.\"}"
+```
+を、実行。（keywordの部分はカスタマイズ可能。こんな世界を作りたい。と指令を出す。）
+
+４：my-orchestratorに、複数のPBRオブジェクトURLが出力される。
+
+<img width="3839" height="2155" alt="スクリーンショット 2025-08-31 150300" src="https://github.com/user-attachments/assets/83465159-e18b-4f97-a556-300201d9f4b4" />
+
+参考動画：
+https://youtu.be/ptawkLrc2Qs
+
+
+## meshy3Dコンテンツを作るためのサーバー準備（server）
 ０：pnpmつかえないならいれる
 
 １：依存インストール
@@ -23,7 +42,7 @@ curl -s -X POST "http://localhost:3000/api/3Dcontents" \
 curl -s "http://localhost:3000/api/jobs/<jobId>"
 ```
 
-## 生成の仕方
+## 生成の仕方(server)
 #ローカルサーバAPIを叩いて３Dコンテンツを生成する方法
 （ただし、生成にはクレジット消費してるからテストなら後述のURLから.glbを使用してくれい！）
 
